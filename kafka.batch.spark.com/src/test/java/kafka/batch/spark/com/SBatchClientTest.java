@@ -1,16 +1,16 @@
-package kafka.batching.spark.com;
+package kafka.batch.spark.com;
 
 import java.io.IOException;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-public class SBatchingClientTest {
+public class SBatchClientTest {
 	@Test
 	public void initSparkSessionTest() throws Exception {
-		SBatchingClient ssClient = null;
+		SBatchClient ssClient = null;
 		try {
-			ssClient = new SBatchingClient().initSparkSession();
+			ssClient = new SBatchClient().initSparkSession();
 			Assert.assertNotNull(ssClient.getSpark());
 		} catch (IOException | InterruptedException e) {
 			throw e;
@@ -24,3 +24,4 @@ public class SBatchingClientTest {
 
 	}
 }
+

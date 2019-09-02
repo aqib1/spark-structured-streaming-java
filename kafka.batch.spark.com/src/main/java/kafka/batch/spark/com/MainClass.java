@@ -1,4 +1,4 @@
-package kafka.batching.spark.com;
+package kafka.batch.spark.com;
 
 import java.io.IOException;
 
@@ -8,7 +8,7 @@ import org.apache.spark.sql.streaming.StreamingQueryException;
 public class MainClass {
 	public static void main(String[] args) {
 		try {
-			new SBatchingClient().initSparkSession().loadDataSetsFromTopic().writeDataSetsToHDFS();
+			new SBatchClient().initSparkSession().loadDataSetsFromTopic().writeDataSetsToHDFS();
 		} catch (StreamingQueryException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

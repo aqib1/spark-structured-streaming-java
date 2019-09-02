@@ -1,4 +1,4 @@
-package kafka.batching.spark.com;
+package kafka.batch.spark.com;
 
 import java.io.IOException;
 
@@ -7,7 +7,12 @@ import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.streaming.StreamingQueryException;
 
-public class SBatchingClient {
+/**
+ * @author Aqib_Javed
+ * this class uses read method of spark session which is used to read non-stream data 
+ * in the form of batch
+ */
+public class SBatchClient {
 	private static final String URL_HDFS_FILE = "/user/sparkbatchtest/hdfs";
 	private static final String KAFKA_FORMAT = "kafka";
 	private static final String KAFKA_BOOTSTRAP_SERVER_KEY = "kafka.bootstrap.servers";
@@ -28,7 +33,7 @@ public class SBatchingClient {
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	public SBatchingClient initSparkSession() throws IOException, InterruptedException {
+	public SBatchClient initSparkSession() throws IOException, InterruptedException {
 		spark = SparkSession.builder().master("local[*]").appName("SStreamsClient")
 				.config(SPARK_SQL_STREAMING_CHECKPOINT_LOCATION_CONFIG, SPARK_SQL_STREAMING_CHECKPOINT_LOCATION)
 				.getOrCreate();
@@ -38,7 +43,7 @@ public class SBatchingClient {
 	/**
 	 * @return
 	 */
-	public SBatchingClient loadDataSetsFromTopic() {
+	public SBatchClient loadDataSetsFromTopic() {
 		start = System.currentTimeMillis();
 		System.out.println("Current time in seconds [" + (start / 1000) + "] seconds");
 		datasets = spark.read().format(KAFKA_FORMAT)
@@ -52,7 +57,7 @@ public class SBatchingClient {
 	 * @return
 	 * @throws StreamingQueryException
 	 */
-	public SBatchingClient writeDataSetsToHDFS() throws StreamingQueryException {
+	public SBatchClient writeDataSetsToHDFS() throws StreamingQueryException {
 		writeDataSets();
 		return this;
 	}
@@ -67,6 +72,9 @@ public class SBatchingClient {
 	/**
 	 * @param interval
 	 * @throws StreamingQueryException
+	 * 
+	 * calculating time in the end
+	 * 
 	 */
 	private void writeDataSets() throws StreamingQueryException {
 		Dataset<Row> s = datasets.selectExpr("CAST(value AS STRING)");
