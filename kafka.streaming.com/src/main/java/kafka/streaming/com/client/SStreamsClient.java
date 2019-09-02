@@ -22,7 +22,7 @@ public class SStreamsClient {
 	private static final String SPARK_SQL_STREAMING_CHECKPOINT_LOCATION = "/user/sparktest/checkpoints";
 	private static final String SPAKR_STREAM_STARTING_OFFSET_KEY = "startingOffsets";
 	private static final String SPARK_STREAM_STARTING_OFFSET_BEGINNING = "earliest";
-	private static final long DEFAULT_STOP_STREAMING_TIMEINTERVAL = 8000l;
+	private static final long DEFAULT_STOP_STREAMING_TIMEINTERVAL = 60000l;
 	private SparkSession spark = null;
 	private boolean isStreamContinue = false;
 	private static String TOPIC_NAME = "MTKAF";
