@@ -9,6 +9,20 @@ import org.apache.spark.sql.streaming.OutputMode;
 import org.apache.spark.sql.streaming.StreamingQuery;
 import org.apache.spark.sql.streaming.StreamingQueryException;
 
+/**
+ * @author Aqib_Javed
+ *
+ *         In this example we are going to use spark structured streaming, The
+ *         difference between spark streaming and spark structured streaming is
+ *         that structured streaming does not use any concept of batches like
+ *         spark streaming, instead it's architecture is more likely towards
+ *         real streaming where data is poll after some duration/interval and
+ *         result is appended in a unbounded table.
+ * 
+ *         where as spark streaming use a concept of batches where record
+ *         belongs to a batch of DStream
+ *
+ */
 public class SStreamsClient {
 	private static final String URL_HDFS_FILE = "/user/sparktest/hdfs";
 	private static final String KAFKA_FORMAT = "kafka";
@@ -31,6 +45,12 @@ public class SStreamsClient {
 	 * @return
 	 * @throws IOException
 	 * @throws InterruptedException
+	 * 
+	 *                              initializing spark session with providing
+	 *                              checkpoint location System ensure fault
+	 *                              tolerance using checkpointing, in the failure or
+	 *                              shutdown, we can recover previous progress and
+	 *                              state of a previous stream/query
 	 */
 	public SStreamsClient initSparkSession() throws IOException, InterruptedException {
 		spark = SparkSession.builder().master("local[*]").appName("SStreamsClient")
@@ -41,6 +61,8 @@ public class SStreamsClient {
 
 	/**
 	 * @return
+	 * 
+	 *         reading time before loading data from topic of kafka
 	 */
 	public SStreamsClient loadDataSetsFromTopic() {
 		start = System.currentTimeMillis();
@@ -52,6 +74,8 @@ public class SStreamsClient {
 		return this;
 	}
 
+	// use this method in the case you don't want to stop write stream after
+	// time span
 	public SStreamsClient continueStream() {
 		isStreamContinue = true;
 		return this;
@@ -76,17 +100,20 @@ public class SStreamsClient {
 		return this;
 	}
 
-	
 	/**
 	 * @return
 	 */
 	public SparkSession getSpark() {
 		return spark;
 	}
-	
+
 	/**
 	 * @param interval
 	 * @throws StreamingQueryException
+	 * 
+	 *                                 writing structured stream data to csv format
+	 *                                 on given folder calculated time for later
+	 *                                 comparison with batching
 	 */
 	private void writeDataSets(long interval) throws StreamingQueryException {
 		Dataset<Row> s = datasets.selectExpr("CAST(value AS STRING)");
