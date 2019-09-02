@@ -1,11 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>StructuredStreamClient</groupId>
-	<artifactId>kafka.streaming.com</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<properties>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>spark-batching</groupId>
+  <artifactId>kafka.batching.spark.com</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <properties>
 		<maven.compiler.source>1.6</maven.compiler.source>
 		<maven.compiler.target>1.6</maven.compiler.target>
 	</properties>
@@ -64,7 +62,7 @@
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<manifestEntries>
-										<Main-Class>kafka.streaming.com.main.MainClass</Main-Class>
+										<Main-Class>kafka.batching.spark.com.MainClass</Main-Class>
 										<Build-Number>123</Build-Number>
 									</manifestEntries>
 								</transformer>

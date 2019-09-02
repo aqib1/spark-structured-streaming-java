@@ -1,4 +1,4 @@
-package kafka.streaming.com.client;
+package kafka.batching.spark.com;
 
 import java.io.IOException;
 
@@ -9,7 +9,8 @@ import org.apache.spark.sql.streaming.OutputMode;
 import org.apache.spark.sql.streaming.StreamingQuery;
 import org.apache.spark.sql.streaming.StreamingQueryException;
 
-public class SStreamsClient {
+
+public class SBatchingClient {
 	private static final String URL_HDFS_FILE = "/user/sparktest/hdfs";
 	private static final String KAFKA_FORMAT = "kafka";
 	private static final String KAFKA_BOOTSTRAP_SERVER_KEY = "kafka.bootstrap.servers";
@@ -32,7 +33,7 @@ public class SStreamsClient {
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	public SStreamsClient initSparkSession() throws IOException, InterruptedException {
+	public SBatchingClient initSparkSession() throws IOException, InterruptedException {
 		spark = SparkSession.builder().master("local[*]").appName("SStreamsClient")
 				.config(SPARK_SQL_STREAMING_CHECKPOINT_LOCATION_CONFIG, SPARK_SQL_STREAMING_CHECKPOINT_LOCATION)
 				.getOrCreate();
@@ -42,17 +43,17 @@ public class SStreamsClient {
 	/**
 	 * @return
 	 */
-	public SStreamsClient loadDataSetsFromTopic() {
+	public SBatchingClient loadDataSetsFromTopic() {
 		start = System.currentTimeMillis();
 		System.out.println("Current time in seconds [" + (start / 1000) + "] seconds");
-		datasets = spark.readStream().format(KAFKA_FORMAT)
+		datasets = spark.read().format(KAFKA_FORMAT)
 				.option(KAFKA_BOOTSTRAP_SERVER_KEY, BROKER_DOMAIN_NAME + ":" + BROKER_PORT_NUMBER)
 				.option(SUBSCRIBER_KEY, TOPIC_NAME)
 				.option(SPAKR_STREAM_STARTING_OFFSET_KEY, SPARK_STREAM_STARTING_OFFSET_BEGINNING).load();
 		return this;
 	}
 
-	public SStreamsClient continueStream() {
+	public SBatchingClient continueStream() {
 		isStreamContinue = true;
 		return this;
 	}
@@ -61,7 +62,7 @@ public class SStreamsClient {
 	 * @return
 	 * @throws StreamingQueryException
 	 */
-	public SStreamsClient writeDataSetsToHDFS() throws StreamingQueryException {
+	public SBatchingClient writeDataSetsToHDFS() throws StreamingQueryException {
 		writeDataSets(DEFAULT_STOP_STREAMING_TIMEINTERVAL);
 		return this;
 	}
@@ -71,7 +72,7 @@ public class SStreamsClient {
 	 * @return
 	 * @throws StreamingQueryException
 	 */
-	public SStreamsClient writeDataSetsToHDFS(long interval) throws StreamingQueryException {
+	public SBatchingClient writeDataSetsToHDFS(long interval) throws StreamingQueryException {
 		writeDataSets(interval);
 		return this;
 	}
@@ -93,10 +94,10 @@ public class SStreamsClient {
 		StreamingQuery sq = s.writeStream().format("csv").option("path", URL_HDFS_FILE).outputMode(OutputMode.Append())
 				.start();
 
-		if (isStreamContinue)
+//		if (isStreamContinue)
 			sq.awaitTermination();
-		else
-			sq.awaitTermination(interval);
+//		else
+//			sq.awaitTermination(interval);
 
 		long end = System.currentTimeMillis();
 		System.out.println("Time after completing streaming [" + ((end - start) / 1000) + "] seconds");
